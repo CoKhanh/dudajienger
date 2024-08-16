@@ -22,9 +22,9 @@ const MessageSent = () => {
 const ChatSpace = () => {
   return (
     <div className="w-full bg-white h-full flex flex-col-reverse pb-6 px-6">
-      <div className="relative w-full">
+      <div className="w-full flex justify-between items-center gap-4">
         <Input className="rounded-xl" placeholder="Aa" />
-        <Button className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full p-0 bg-[#0F75FF]">
+        <Button className="w-8 h-8 rounded-[100%] p-0 bg-[#0F75FF]">
           <ArrowUp className="w-4" />
         </Button>
       </div>
