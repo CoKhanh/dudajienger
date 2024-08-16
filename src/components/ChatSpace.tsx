@@ -8,8 +8,10 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Message from "./Message";
 
-const ChatSpace = () => {
-  const roomId = "j97679024dfwdmps7q4jbdqby56yzne7";
+export interface ChatSpaceProps {
+  roomId: string;
+}
+const ChatSpace = ({ roomId }: ChatSpaceProps) => {
   const messages = useQuery(api.messages.getByRoom, { roomId })
   const mutationMessage = useMutation(api.messages.insertMessage);
   const router = useRouter();
