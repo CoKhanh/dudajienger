@@ -26,3 +26,19 @@ export const createTask = mutation({
     return newTaskId;
   },
 });
+
+export const createTaskWithObjectField = mutation({
+  args: { tasks: v.object({ name: v.string(), label: v.string() })  },
+  handler: async (ctx, args) => {
+    const newTaskId = await ctx.db.insert("tasks", { text: args.tasks });
+    return newTaskId;
+  },
+});
+
+export const createTaskWithArrObjectField = mutation({
+  args: { tasks: v.array(v.object({ name: v.string(), label: v.string() })) },
+  handler: async (ctx, args) => {
+    const newTaskId = await ctx.db.insert("tasks", { text: args.tasks });
+    return newTaskId;
+  },
+});

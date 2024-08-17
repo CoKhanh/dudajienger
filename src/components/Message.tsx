@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { currentUser } from "../../helper";
 
 export interface MessageProps {
   message: string;
@@ -6,11 +7,10 @@ export interface MessageProps {
 }
 
 const Message = ({ message, sender }: MessageProps) => {
-  const currentUser = localStorage.getItem("user");
-  const isCurrentUser = sender === currentUser;
+  const isCurrentUser = sender === currentUser();
   return (
     <div className={clsx("w-fit h-fit", isCurrentUser && "ml-auto text-white", !isCurrentUser && "mr-auto text-black")}>
-      <p className="text-sm font-light">&nbsp; &nbsp;{sender}</p>
+      <p className={clsx("text-sm font-light", isCurrentUser && "hidden")}>&nbsp; &nbsp;{sender}</p>
       <div className={clsx(
         "w-fit h-fit p-3 rounded-2xl font-medium",
         isCurrentUser && "bg-[#2546FF]",

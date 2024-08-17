@@ -7,13 +7,24 @@ import { api } from "../../convex/_generated/api";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Message from "./Message";
+import { Id } from "../../convex/_generated/dataModel";
+import { currentUser } from "../../helper";
 
 export interface ChatSpaceProps {
   roomId: string;
 }
+
 const ChatSpace = ({ roomId }: ChatSpaceProps) => {
   const messages = useQuery(api.messages.getByRoom, { roomId })
+  const room = useQuery(api.rooms.getById, { id: roomId as Id<"rooms"> })
+
+  const isMember = () => {
+    return room?.members?.some((m: any) => m === currentUser());
+  }
+
   const mutationMessage = useMutation(api.messages.insertMessage);
+  const mutationAddMember = useMutation(api.rooms.addMember);
+
   const router = useRouter();
 
   const [message, setMessage] = useState<string>("");
@@ -23,10 +34,19 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
     setMessage(value);
   }
 
+  const handleJoinRoom = () => {
+    const newMember = currentUser();
+    if (!newMember) return;
+    mutationAddMember({
+      newMember,
+      id: roomId as Id<"rooms">,
+    })
+  }
+
   const handleSendMsg = () => {
     if (!message) return;
 
-    const sender = localStorage.getItem("user");
+    const sender = currentUser();
 
     if (!sender) return;
     mutationMessage({
@@ -39,9 +59,7 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
   };
 
   useEffect(() => {
-    const currentUser = localStorage.getItem("user");
-
-    if (!currentUser) {
+    if (!currentUser()) {
       router.push("/");
     }
   }, [])
@@ -49,10 +67,16 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
   return (
     <div className="w-full bg-white h-full flex flex-col-reverse pb-6 px-6">
       <div className="w-full flex justify-between items-center gap-4">
-        <Input className="rounded-xl" placeholder="Aa" onChange={handleChangeMessageInput} value={message} />
-        <Button className="w-8 h-8 rounded-[100%] p-0 bg-[#0F75FF]" onClick={handleSendMsg}>
-          <ArrowUp className="w-4" />
-        </Button>
+        {isMember() ? (
+          <>
+            <Input className="rounded-xl" placeholder="Aa" onChange={handleChangeMessageInput} value={message} />
+            <Button className="w-8 h-8 rounded-[100%] p-0 bg-[#0F75FF]" onClick={handleSendMsg}>
+              <ArrowUp className="w-4" />
+            </Button>
+          </>
+        ) : (
+          <Button className="w-full bg-[#0F75FF] font-bold rounded-xl" onClick={handleJoinRoom}>Join</Button>          
+        )}
       </div>
       <ScrollArea>
         <div className="w-full h-full py-4 flex flex-col gap-4">
