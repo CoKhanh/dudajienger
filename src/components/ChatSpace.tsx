@@ -29,6 +29,7 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
   const router = useRouter();
 
   const [message, setMessage] = useState<string>("");
+  const messageListRef = useRef<HTMLDivElement>(null);
 
   const handleChangeMessageInput = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -96,6 +97,12 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (!messageListRef.current) return;
+
+    messageListRef.current.lastElementChild?.scrollIntoView();
+  }, [messages])
+
   if (!room) {
     return (
       <div className="w-full bg-white h-full flex items-center justify-center">
@@ -136,7 +143,7 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
         )}
       </div>
       <ScrollArea>
-        <div className="w-full h-full py-4 flex flex-col gap-4">
+        <div className="w-full h-full py-4 flex flex-col gap-4" ref={messageListRef}>
           {messages?.map(({ _id, sender, message, type, url }) => (
             <Message key={_id} message={message} sender={sender} type={type} url={url} />
           ))}
