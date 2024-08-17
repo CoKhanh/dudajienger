@@ -1,14 +1,14 @@
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Paperclip } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Message from "./Message";
 import { Id } from "../../convex/_generated/dataModel";
-import { currentUser } from "../../helper";
+import { currentUser, getMediaMsgType } from "../../helper";
 
 export interface ChatSpaceProps {
   roomId: string;
@@ -22,7 +22,8 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
     return room?.members?.some((m: any) => m === currentUser());
   }
 
-  const mutationMessage = useMutation(api.messages.insertMessage);
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+  const mutationMessageV2 = useMutation(api.messages.insertMessageV2);
   const mutationAddMember = useMutation(api.rooms.addMember);
 
   const router = useRouter();
@@ -43,20 +44,51 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
     })
   }
 
-  const handleSendMsg = () => {
+  const handleEnterKey = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSendStringMsg()
+    }
+  }
+
+  const handleSendStringMsg = () => {
     if (!message) return;
 
     const sender = currentUser();
 
     if (!sender) return;
-    mutationMessage({
+
+    mutationMessageV2({
       roomId,
       message,
       sender,
-    });
+      type: "string",
+    })
 
     setMessage("");
   };
+
+  const handleSendMediaMsg = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files![0]
+    const sender = currentUser();
+
+    if (!file || !sender) return;
+
+    const postUrl = await generateUploadUrl();
+    const result = await fetch(postUrl, {
+      method: "POST",
+      headers: { "Content-Type": file.type },
+      body: file,
+    });
+    const { storageId } = await result.json();
+
+    mutationMessageV2({
+      storageId,
+      roomId,
+      message: file.name,
+      sender,
+      type: getMediaMsgType(file.type),
+    })
+  }
 
   useEffect(() => {
     if (!currentUser()) {
@@ -77,10 +109,27 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
       <div className="w-full flex justify-between items-center gap-4">
         {isMember() ? (
           <>
-            <Input className="rounded-xl" placeholder="Aa" onChange={handleChangeMessageInput} value={message} />
-            <Button className="w-8 h-8 rounded-[100%] p-0 bg-[#0F75FF]" onClick={handleSendMsg}>
+            <Input
+              className="rounded-xl"
+              placeholder="Aa"
+              onChange={handleChangeMessageInput}
+              onKeyDown={handleEnterKey}
+              value={message}
+            />
+            <Button className="w-8 h-8 rounded-[100%] p-0 bg-[#0F75FF]" onClick={handleSendStringMsg}>
               <ArrowUp className="w-4" />
             </Button>
+            <>
+              <input
+                type="file"
+                className="hidden"
+                id="file-input"
+                onChange={handleSendMediaMsg}
+              />
+              <label htmlFor="file-input" className="cursor-pointer w-8 h-8 rounded-[100%] p-0 border border-[#0F75FF] flex justify-center items-center">
+                <Paperclip className="w-4 text-[#0F75FF]" />
+              </label>
+            </>
           </>
         ) : (
           <Button className="w-full bg-[#0F75FF] font-bold rounded-xl" onClick={handleJoinRoom}>Join</Button>          
@@ -88,8 +137,8 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
       </div>
       <ScrollArea>
         <div className="w-full h-full py-4 flex flex-col gap-4">
-          {messages?.map(({ _id, sender, message }) => (
-            <Message key={_id} message={message} sender={sender} />
+          {messages?.map(({ _id, sender, message, type, url }) => (
+            <Message key={_id} message={message} sender={sender} type={type} url={url} />
           ))}
         </div>
       </ScrollArea>

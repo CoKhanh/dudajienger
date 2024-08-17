@@ -55,6 +55,7 @@ const ConvexTask = () => {
 
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const sendImage = useMutation(api.files.sendImage);
+  const sendImageToMsg = useMutation(api.messages.insertMessageV2);
 
   const imageInput = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -73,7 +74,14 @@ const ConvexTask = () => {
     });
     const { storageId } = await result.json();
     // Step 3: Save the newly allocated storage id to the database
-    await sendImage({ storageId, author: name });
+    // await sendImage({ storageId, author: name });
+    await sendImageToMsg({
+      // storageId,
+      sender: "user1",
+      roomId: "j976k8ybkqa5c3vycafgn3cs3n6yz5fj",
+      message: "send file",
+      type: "string"
+    })
 
     setSelectedImage(null);
     imageInput.current!.value = "";
