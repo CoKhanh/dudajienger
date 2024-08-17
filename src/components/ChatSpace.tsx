@@ -64,6 +64,14 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
     }
   }, [])
 
+  if (!room) {
+    return (
+      <div className="w-full bg-white h-full flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="w-full bg-white h-full flex flex-col-reverse pb-6 px-6">
       <div className="w-full flex justify-between items-center gap-4">

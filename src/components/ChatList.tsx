@@ -1,11 +1,14 @@
+import { useQuery } from "convex/react"
 import ChatRoom from "./ChatRoom"
+import { api } from "../../convex/_generated/api"
 
 const ChatList = () => {
+  const rooms = useQuery(api.rooms.get);
   return (
     <div className="w-1/4 bg-white h-full border border-r-gray-300">
-      <ChatRoom name="Frontend Dev" roomId="j97679024dfwdmps7q4jbdqby56yzne7" avatar="bg-yellow-400" />
-      <ChatRoom name="Backend Dev" roomId="j976k8ybkqa5c3vycafgn3cs3n6yz5fj" avatar="bg-[#F0F0F0]" />
-      <ChatRoom name="Product" roomId="j972tdx8xy5b09ga9frjjagcsn6yztc3" avatar="bg-[#0F75FF]" />
+      {rooms?.map(({ _id, name }) => (
+        <ChatRoom key={_id} name={name} roomId={_id} avatar={"bg-[#F0F0F0]"} />
+      ))}
     </div>
   )
 }

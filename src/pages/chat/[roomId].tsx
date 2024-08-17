@@ -7,7 +7,7 @@ const Chat = () => {
   const { roomId } = query;
 
   return (
-    <div className="w-full h-screen pt-16 flex">
+    <div className="w-full h-screen pt-20 flex">
       <ChatList />
       {roomId && roomId !== "default" && (
         <ChatSpace roomId={roomId as string} />
