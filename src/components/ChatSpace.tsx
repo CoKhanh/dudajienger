@@ -91,6 +91,10 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
     });
   };
 
+  const handleClickVideoCall = () => {
+    router.push("/chat/video-call");
+  };
+
   useEffect(() => {
     if (!currentUser()) {
       router.push("/");
@@ -126,10 +130,8 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
             <Button className="w-8 h-8 rounded-[100%] p-0 bg-[#0F75FF]" onClick={handleSendStringMsg}>
               <ArrowUp className="w-4" />
             </Button>
-            <Button className="w-8 h-8 rounded-[100%] p-0 bg-[#0F75FF]" onClick={() => {
-              router.push("/chat/video-call")
-            }}>
-              <Video />
+            <Button className="w-8 h-8 rounded-[100%] p-0 bg-transparent border border-[#0F75FF] hover:bg-transparent" onClick={handleClickVideoCall}>
+              <Video className="w-4 text-[#0F75FF]" />
             </Button>
             <>
               <input
