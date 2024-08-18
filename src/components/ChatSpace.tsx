@@ -116,8 +116,8 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
   }
 
   return (
-    <div className="w-full bg-white h-full flex flex-col-reverse pb-6 px-6">
-      <div className="w-full flex justify-between items-center gap-4">
+    <div className="w-full bg-white h-full flex flex-col-reverse pb-6 px-4 md:px-6">
+      <div className="w-full flex justify-between items-center gap-2 md:gap-4">
         {isMember() ? (
           <>
             <Input

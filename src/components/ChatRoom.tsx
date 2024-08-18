@@ -5,14 +5,16 @@ export interface ChatRoomProps {
   name: string;
   roomId: string;
   avatar: string;
+  customAction?(): void;
 }
 
-const ChatRoom = ({ name, roomId, avatar }: ChatRoomProps) => {
+const ChatRoom = ({ name, roomId, avatar, customAction = () => {} }: ChatRoomProps) => {
   const router = useRouter();
   const { query } = router;
   const { roomId: id } = query;
 
   const handleClickRoom = () => {
+    customAction();
     router.push(`/chat/${roomId}`, undefined, { shallow: true });
   }
 
