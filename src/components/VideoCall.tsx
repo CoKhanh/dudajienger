@@ -1,29 +1,27 @@
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import { useEffect, useRef } from 'react';
-import { randomID } from '../../helper';
-
-// export function getUrlParams(
-//   url = window.location.href
-// ) {
-//   let urlStr = url.split('?')[1];
-//   return new URLSearchParams(urlStr);
-// }
+import { currentUser, randomID } from '../../helper';
+import { useRouter } from 'next/router';
 
 const VideoCall = () => {
-  // const roomID = randomID(5);
-  const roomID = "test-video";
+  const { back, push, query } = useRouter();
+  const { roomID = randomID(5) } = query;
   const videoCallContainerRef = useRef<HTMLDivElement>(null);
   const appID = process.env.NEXT_PUBLIC_ZEGO_APP_ID;
   const serverSecret = process.env.NEXT_PUBLIC_ZEGO_SERVER_SECRET;
 
   useEffect(() => {
-    console.log("videoRef", videoCallContainerRef);
+    const user = currentUser();
+    if (!user) {
+      push("/");
+    }
+
     // generate Kit Token
-    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(+appID!, serverSecret!, roomID, randomID(5), randomID(5));
+    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(+appID!, serverSecret!, roomID as string, randomID(5), user as string);
 
     // Create instance object from Kit Token.
     const zp = ZegoUIKitPrebuilt.create(kitToken);
-    
+
     // start the call
     zp.joinRoom({
       container: videoCallContainerRef.current,
@@ -38,10 +36,19 @@ const VideoCall = () => {
         },
       ],
       scenario: {
-        mode: ZegoUIKitPrebuilt.GroupCall, // To implement 1-on-1 calls, modify the parameter here to [ZegoUIKitPrebuilt.OneONoneCall].
+        mode: ZegoUIKitPrebuilt.GroupCall,
       },
+      showLeavingView: false,
+      showPreJoinView: false,
+      leaveRoomDialogConfig: {
+        titleText: "End the call?",
+        descriptionText: "Are you sure to end the call?"
+      },
+      onLeaveRoom: () => {
+        back();
+      }
     });
-    
+
   }, [])
 
   return (
