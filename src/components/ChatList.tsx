@@ -1,6 +1,6 @@
-import { useQuery } from "convex/react"
-import ChatRoom from "./ChatRoom"
-import { api } from "../../convex/_generated/api"
+import { useQuery } from "convex/react";
+import ChatRoom from "./ChatRoom";
+import { api } from "../../convex/_generated/api";
 
 const ChatList = () => {
   const rooms = useQuery(api.rooms.get);
@@ -10,7 +10,7 @@ const ChatList = () => {
         <ChatRoom key={_id} name={name} roomId={_id} avatar={"bg-[#F0F0F0]"} />
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default ChatList
+export default ChatList;

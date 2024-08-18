@@ -12,7 +12,7 @@ const Entry = () => {
     const value = e.target.value;
 
     setNickname(value);
-  }
+  };
 
   const handleJoin = () => {
     if (nickname) {
@@ -22,13 +22,13 @@ const Entry = () => {
     }
 
     router.push("/chat/default");
-  }
+  };
 
   useEffect(() => {
     if (currentUser()) {
       router.push("/chat/default");
-    }
-  }, [])
+    };
+  }, []);
 
   return (
     <div className="w-full h-screen flex justify-center items-center">
@@ -38,7 +38,7 @@ const Entry = () => {
         <Button onClick={handleJoin} className="bg-[#0F75FF]">Join</Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Entry;

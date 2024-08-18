@@ -1,26 +1,26 @@
 export const currentUser = () => {
   return localStorage.getItem("user");
-}
+};
 
 export const getMediaMsgType = (fileMime: string) => {
   if (fileMime.includes("image")) {
     return "image";
   } else if (fileMime.includes("video")) {
-    return "video"
+    return "video";
   } else {
-    return "other"
+    return "other";
   }
-}
+};
 
 export function randomID(len: number) {
-	let result = "";
-	if (result) return result;
-	var chars = "12345qwertyuiopasdfgh67890jklmnbvcxzMNBVCZXASDQWERTYHGFUIOLKJP",
-		maxPos = chars.length,
-		i;
-	len = len || 5;
-	for (i = 0; i < len; i++) {
-		result += chars.charAt(Math.floor(Math.random() * maxPos));
-	}
-	return result;
-}
+  let result = "";
+  if (result) return result;
+  var chars = "12345qwertyuiopasdfgh67890jklmnbvcxzMNBVCZXASDQWERTYHGFUIOLKJP",
+    maxPos = chars.length,
+    i;
+  len = len || 5;
+  for (i = 0; i < len; i++) {
+    result += chars.charAt(Math.floor(Math.random() * maxPos));
+  }
+  return result;
+};

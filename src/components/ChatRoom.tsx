@@ -25,7 +25,7 @@ const ChatRoom = ({ name, roomId, avatar }: ChatRoomProps) => {
       </div>
       <p className="font-semibold text-lg">{name}</p>
     </div>
-  )
-}
+  );
+};
 
 export default ChatRoom;

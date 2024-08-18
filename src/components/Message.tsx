@@ -6,8 +6,8 @@ export interface MessageProps {
   message: string;
   sender: string;
   type: "string" | "image" | "video" |"other";
-  url?: string
-}
+  url?: string;
+};
 
 const Message = ({ message, sender, type, url = "string" }: MessageProps) => {
   const isCurrentUser = sender === currentUser();
@@ -41,7 +41,7 @@ const Message = ({ message, sender, type, url = "string" }: MessageProps) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Message;

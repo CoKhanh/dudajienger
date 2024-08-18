@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import Header from "./Header";
 
 export interface LayoutProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
@@ -11,7 +11,7 @@ const Layout = ({ children }: LayoutProps) => {
       <Header />
       {children}
     </main>
-  )
-}
+  );
+};
 
 export default Layout;

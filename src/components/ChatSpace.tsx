@@ -15,12 +15,12 @@ export interface ChatSpaceProps {
 }
 
 const ChatSpace = ({ roomId }: ChatSpaceProps) => {
-  const messages = useQuery(api.messages.getByRoom, { roomId })
-  const room = useQuery(api.rooms.getById, { id: roomId as Id<"rooms"> })
+  const messages = useQuery(api.messages.getByRoom, { roomId });
+  const room = useQuery(api.rooms.getById, { id: roomId as Id<"rooms"> });
 
   const isMember = () => {
     return room?.members?.some((m: any) => m === currentUser());
-  }
+  };
 
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const mutationMessageV2 = useMutation(api.messages.insertMessageV2);
@@ -34,7 +34,7 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
   const handleChangeMessageInput = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setMessage(value);
-  }
+  };
 
   const handleJoinRoom = () => {
     const newMember = currentUser();
@@ -42,14 +42,14 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
     mutationAddMember({
       newMember,
       id: roomId as Id<"rooms">,
-    })
-  }
+    });
+  };
 
   const handleEnterKey = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleSendStringMsg()
+      handleSendStringMsg();
     }
-  }
+  };
 
   const handleSendStringMsg = () => {
     if (!message) return;
@@ -63,13 +63,13 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
       message,
       sender,
       type: "string",
-    })
+    });
 
     setMessage("");
   };
 
   const handleSendMediaMsg = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files![0]
+    const file = e.target.files![0];
     const sender = currentUser();
 
     if (!file || !sender) return;
@@ -88,27 +88,27 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
       message: file.name,
       sender,
       type: getMediaMsgType(file.type),
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     if (!currentUser()) {
       router.push("/");
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (!messageListRef.current) return;
 
     messageListRef.current.lastElementChild?.scrollIntoView();
-  }, [messages])
+  }, [messages]);
 
   if (!room) {
     return (
       <div className="w-full bg-white h-full flex items-center justify-center">
         <p>Loading...</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -155,7 +155,7 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
         </div>
       </ScrollArea>
     </div>
-  )
-}
+  );
+};
 
 export default ChatSpace;
