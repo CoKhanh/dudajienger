@@ -1,4 +1,4 @@
-import { ArrowUp, Paperclip } from "lucide-react";
+import { ArrowUp, Paperclip, Video } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
@@ -125,6 +125,11 @@ const ChatSpace = ({ roomId }: ChatSpaceProps) => {
             />
             <Button className="w-8 h-8 rounded-[100%] p-0 bg-[#0F75FF]" onClick={handleSendStringMsg}>
               <ArrowUp className="w-4" />
+            </Button>
+            <Button className="w-8 h-8 rounded-[100%] p-0 bg-[#0F75FF]" onClick={() => {
+              router.push("/chat/video-call")
+            }}>
+              <Video />
             </Button>
             <>
               <input
